@@ -153,6 +153,7 @@ static void stmmac_exit_fs(struct net_device *dev);
 #define RTL_8211F_PHY_ID  0x001cc916
 #define DP_83848_PHY_ID   0x20005c90
 
+#define YT8521_PHY_ID	0x0000011a
 #define RK631_PHY_ID	0x4f51e91b
 #define RK631_PHY_ID_MASK	0x4fffffff
 #define RK631_EXTENDED_REGISTER_ADDRESS_OFFSET	0x1e
@@ -7542,6 +7543,9 @@ ret = phy_register_fixup_for_uid(DP_83848_PHY_ID, 0xffffffff, phy_dp83848_led_fi
 if (ret)
 	pr_warn("Cannot register PHY board fixup.\n");
 ret = phy_register_fixup_for_uid(RK631_PHY_ID, RK631_PHY_ID_MASK, phy_rk631_led_fixup);
+if (ret)
+	pr_warn("Cannot register PHY board fixup.\n");
+ret = phy_register_fixup_for_uid(YT8521_PHY_ID, RK631_PHY_ID_MASK, phy_rk631_led_fixup);
 if (ret)
 	pr_warn("Cannot register PHY board fixup.\n");
 #endif
