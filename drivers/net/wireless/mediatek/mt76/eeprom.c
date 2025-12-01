@@ -62,7 +62,7 @@ int mt76_get_of_eeprom(struct mt76_dev *dev, void *eep, int offset, int len)
 		goto out_put_node;
 	}
 
-	offset += be32_to_cpup(list);
+	offset = be32_to_cpup(list);
 	ret = mtd_read(mtd, offset, len, &retlen, eep);
 	put_mtd_device(mtd);
 	if (mtd_is_bitflip(ret))
@@ -138,6 +138,7 @@ mt76_find_power_limits_node(struct mt76_dev *dev)
 {
 	struct device_node *np = dev->dev->of_node;
 	const char *const region_names[] = {
+		[NL80211_DFS_UNSET] = "ww",
 		[NL80211_DFS_ETSI] = "etsi",
 		[NL80211_DFS_FCC] = "fcc",
 		[NL80211_DFS_JP] = "jp",

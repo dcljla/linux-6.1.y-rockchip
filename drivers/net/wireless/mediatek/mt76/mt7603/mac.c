@@ -39,7 +39,7 @@ void mt7603_mac_reset_counters(struct mt7603_dev *dev)
 	for (i = 0; i < 2; i++)
 		mt76_rr(dev, MT_TX_AGG_CNT(i));
 
-	memset(dev->mt76.aggr_stats, 0, sizeof(dev->mt76.aggr_stats));
+	memset(dev->mphy.aggr_stats, 0, sizeof(dev->mphy.aggr_stats));
 }
 
 void mt7603_mac_set_timing(struct mt7603_dev *dev)
@@ -1382,7 +1382,6 @@ void mt7603_pse_client_reset(struct mt7603_dev *dev)
 		   MT_CLIENT_RESET_TX_R_E_2_S);
 
 	/* Start PSE client TX abort */
-	mt76_set(dev, MT_WPDMA_GLO_CFG, MT_WPDMA_GLO_CFG_FORCE_TX_EOF);
 	mt76_set(dev, addr, MT_CLIENT_RESET_TX_R_E_1);
 	mt76_poll_msec(dev, addr, MT_CLIENT_RESET_TX_R_E_1_S,
 		       MT_CLIENT_RESET_TX_R_E_1_S, 500);
@@ -1835,8 +1834,8 @@ void mt7603_mac_work(struct work_struct *work)
 	for (i = 0, idx = 0; i < 2; i++) {
 		u32 val = mt76_rr(dev, MT_TX_AGG_CNT(i));
 
-		dev->mt76.aggr_stats[idx++] += val & 0xffff;
-		dev->mt76.aggr_stats[idx++] += val >> 16;
+		dev->mphy.aggr_stats[idx++] += val & 0xffff;
+		dev->mphy.aggr_stats[idx++] += val >> 16;
 	}
 
 	if (dev->mphy.mac_work_count == 10)

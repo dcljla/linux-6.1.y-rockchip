@@ -3,7 +3,7 @@
 
 #include "mt7921.h"
 #include "../dma.h"
-#include "mac.h"
+#include "../mt76_connac2_mac.h"
 
 int mt7921e_tx_prepare_skb(struct mt76_dev *mdev, void *txwi_ptr,
 			   enum mt76_txq_id qid, struct mt76_wcid *wcid,
@@ -48,7 +48,7 @@ int mt7921e_tx_prepare_skb(struct mt76_dev *mdev, void *txwi_ptr,
 	memset(txp, 0, sizeof(struct mt76_connac_hw_txp));
 	mt76_connac_write_hw_txp(mdev, tx_info, txp, id);
 
-	tx_info->skb = DMA_DUMMY_DATA;
+	tx_info->skb = NULL;
 
 	return 0;
 }
@@ -78,6 +78,7 @@ int mt7921e_mac_reset(struct mt7921_dev *dev)
 	mt76_wr(dev, MT_WFDMA0_HOST_INT_ENA, 0);
 	mt76_wr(dev, MT_PCIE_MAC_INT_ENABLE, 0x0);
 
+	set_bit(MT76_RESET, &dev->mphy.state);
 	set_bit(MT76_MCU_RESET, &dev->mphy.state);
 	wake_up(&dev->mt76.mcu.wait);
 	skb_queue_purge(&dev->mt76.mcu.res_q);
@@ -128,6 +129,7 @@ int mt7921e_mac_reset(struct mt7921_dev *dev)
 
 	err = __mt7921_start(&dev->phy);
 out:
+	clear_bit(MT76_RESET, &dev->mphy.state);
 
 	local_bh_disable();
 	napi_enable(&dev->mt76.tx_napi);

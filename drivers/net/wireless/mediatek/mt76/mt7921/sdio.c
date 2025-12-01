@@ -13,11 +13,12 @@
 
 #include "mt7921.h"
 #include "../sdio.h"
-#include "mac.h"
+#include "../mt76_connac2_mac.h"
 #include "mcu.h"
 
 static const struct sdio_device_id mt7921s_table[] = {
-	{ SDIO_DEVICE(SDIO_VENDOR_ID_MEDIATEK, 0x7901) },
+	{ SDIO_DEVICE(SDIO_VENDOR_ID_MEDIATEK, 0x7901),
+		.driver_data = (kernel_ulong_t)MT7921_FIRMWARE_WM },
 	{ }	/* Terminating entry */
 };
 
@@ -89,6 +90,7 @@ static int mt7921s_probe(struct sdio_func *func,
 {
 	static const struct mt76_driver_ops drv_ops = {
 		.txwi_size = MT_SDIO_TXD_SIZE,
+		.drv_flags = MT_DRV_AMSDU_OFFLOAD,
 		.survey_flags = SURVEY_INFO_TIME_TX |
 				SURVEY_INFO_TIME_RX |
 				SURVEY_INFO_TIME_BSS_RX,
@@ -97,7 +99,6 @@ static int mt7921s_probe(struct sdio_func *func,
 		.tx_status_data = mt7921_usb_sdio_tx_status_data,
 		.rx_skb = mt7921_queue_rx_skb,
 		.rx_check = mt7921_rx_check,
-		.sta_ps = mt7921_sta_ps,
 		.sta_add = mt7921_mac_sta_add,
 		.sta_assoc = mt7921_mac_sta_assoc,
 		.sta_remove = mt7921_mac_sta_remove,
@@ -120,19 +121,24 @@ static int mt7921s_probe(struct sdio_func *func,
 		.drv_own = mt7921s_mcu_drv_pmctrl,
 		.fw_own = mt7921s_mcu_fw_pmctrl,
 	};
-
+	struct ieee80211_ops *ops;
 	struct mt7921_dev *dev;
 	struct mt76_dev *mdev;
+	u8 features;
 	int ret;
 
-	mdev = mt76_alloc_device(&func->dev, sizeof(*dev), &mt7921_ops,
-				 &drv_ops);
+	ops = mt7921_get_mac80211_ops(&func->dev, (void *)id->driver_data,
+				      &features);
+	if (!ops)
+		return -ENOMEM;
+
+	mdev = mt76_alloc_device(&func->dev, sizeof(*dev), ops, &drv_ops);
 	if (!mdev)
 		return -ENOMEM;
 
 	dev = container_of(mdev, struct mt7921_dev, mt76);
+	dev->fw_features = features;
 	dev->hif_ops = &mt7921_sdio_ops;
-
 	sdio_set_drvdata(func, dev);
 
 	ret = mt76s_init(mdev, func, &mt7921s_ops);
@@ -222,7 +228,7 @@ static int mt7921s_suspend(struct device *__dev)
 	mt76_txq_schedule_all(&dev->mphy);
 	mt76_worker_disable(&mdev->tx_worker);
 	mt76_worker_disable(&mdev->sdio.status_worker);
-	mt76_worker_disable(&mdev->sdio.stat_worker);
+	cancel_work_sync(&mdev->sdio.stat_work);
 	clear_bit(MT76_READING_STATS, &dev->mphy.state);
 	mt76_tx_status_check(mdev, true);
 
@@ -254,7 +260,6 @@ restore_txrx_worker:
 restore_worker:
 	mt76_worker_enable(&mdev->tx_worker);
 	mt76_worker_enable(&mdev->sdio.status_worker);
-	mt76_worker_enable(&mdev->sdio.stat_worker);
 
 	if (!pm->ds_enable)
 		mt76_connac_mcu_set_deep_sleep(mdev, false);
@@ -287,7 +292,6 @@ static int mt7921s_resume(struct device *__dev)
 	mt76_worker_enable(&mdev->sdio.txrx_worker);
 	mt76_worker_enable(&mdev->sdio.status_worker);
 	mt76_worker_enable(&mdev->sdio.net_worker);
-	mt76_worker_enable(&mdev->sdio.stat_worker);
 
 	/* restore previous ds setting */
 	if (!pm->ds_enable)
