@@ -128,6 +128,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3528-hlink-h28k.dtb
 dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3528-hlink-h29k.dtb
 dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3528-hlink-ht2.dtb
 dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3528-mangopi-m28k.dtb
+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3528-nanopi-rev01.dtb
 dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3528-radxa-e20c.dtb
 dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3528-radxa-e24c.dtb
 dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3528-radxa-e24c-dsa.dtb
