@@ -739,7 +739,9 @@
 		reg = <0x51>;
 		status = "okay";
 
+		cec-enable;
 		i2s-enable-default;
+		#sound-dai-cells = <0>;
 
 		interrupt-parent = <&gpio4>;
 		interrupts = <RK_PB4 IRQ_TYPE_LEVEL_HIGH>;
@@ -1182,12 +1184,14 @@
 
 /* rk628 hdmirx sound */
 &sai4 {
+	dmas = <&dmac2 1>;
+	dma-names = "rx";
 	pinctrl-names = "default";
 	pinctrl-0 = <&sai4m0_lrck
 		      &sai4m0_sclk
 		      &sai4m0_sdi>;
 	rockchip,capture-only;
-	/*rockchip,sai-rx-wait-time-ms = <50>;*/
+	rockchip,sai-rx-wait-time-ms = <50>;
 	status = "okay";
 };
 
