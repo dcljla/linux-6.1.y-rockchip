@@ -480,18 +480,6 @@ config BT_HCIBTUSB_RTLBTUSB
 	  Say Y here to compile support for Bluetooth USB devices into the
 	  kernel or say M to compile it as module (rtk_btusb).
 
-config BT_NXPUART
-	tristate "NXP protocol support"
-	depends on SERIAL_DEV_BUS
-	select CRC32
-	select CRC8
-	help
-	  NXP is serial driver required for NXP Bluetooth
-	  devices with UART interface.
-
-	  Say Y here to compile support for NXP Bluetooth UART device into
-	  the kernel, or say M here to compile as a module (btnxpuart).
-
 config BT_INTEL_PCIE
 	tristate "Intel HCI PCIe driver"
 	depends on PCI
