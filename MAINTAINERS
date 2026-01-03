@@ -16548,6 +16548,14 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
 F:	drivers/powercap/dtpm*
 F:	include/linux/dtpm.h
 
+POWER SEQUENCING
+M:	Bartosz Golaszewski <brgl@bgdev.pl>
+L:	linux-pm@vger.kernel.org
+S:	Maintained
+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+F:	drivers/power/sequencing/
+F:	include/linux/pwrseq/
+
 POWER STATE COORDINATION INTERFACE (PSCI)
 M:	Mark Rutland <mark.rutland@arm.com>
 M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
