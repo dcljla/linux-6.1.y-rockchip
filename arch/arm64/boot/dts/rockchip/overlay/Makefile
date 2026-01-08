@@ -126,6 +126,7 @@ dtbo-$(CONFIG_ARCH_ROCKCHIP) += \
 	rk3588-can2-m1.dtbo \
 	rk3588-dwc3-host.dtbo \
 	rk3588-dwc3-peripheral.dtbo \
+	rk3588-full-cpufreq.dtbo \
 	rk3588-i2c0-m1.dtbo \
 	rk3588-i2c1-m0.dtbo \
 	rk3588-i2c1-m2.dtbo \
@@ -178,6 +179,12 @@ dtbo-$(CONFIG_ARCH_ROCKCHIP) += \
 	rk3588-pwm7-m0.dtbo \
 	rk3588-pwm7-m3.dtbo \
 	rk3588-pwm8-m0.dtbo \
+	rk3588-rkvdec0.dtbo \
+	rk3588-rkvdec1.dtbo \
+	rk3588-rkvenc0.dtbo \
+	rk3588-rkvenc1.dtbo \
+	rk3588-sdhci-hs400.dtbo \
+	rk3588-sdio-uhs.dtbo \
 	rk3588-spi0-m1-cs0-spidev.dtbo \
 	rk3588-spi0-m1-cs1-spidev.dtbo \
 	rk3588-spi0-m2-cs0-cs1-spidev.dtbo \
