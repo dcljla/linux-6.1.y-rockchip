@@ -5799,7 +5799,7 @@ void aic_ipc_setting(struct rwnx_vif *rwnx_vif){
 #endif
 
 extern int get_adap_test(void);
-extern void *aicwf_prealloc_txq_alloc(size_t size);
+extern void *aicwf_sdio_prealloc_txq_alloc(size_t size);
 extern char default_ccode[];
 
 int rwnx_cfg80211_init(struct rwnx_plat *rwnx_plat, void **platform_data)
@@ -5906,7 +5906,7 @@ int rwnx_cfg80211_init(struct rwnx_plat *rwnx_plat, void **platform_data)
 	rwnx_hwq_init(rwnx_hw);
 
 #ifdef CONFIG_PREALLOC_TXQ
-        rwnx_hw->txq = (struct rwnx_txq*)aicwf_prealloc_txq_alloc(sizeof(struct rwnx_txq)*NX_NB_TXQ);
+        rwnx_hw->txq = (struct rwnx_txq*)aicwf_sdio_prealloc_txq_alloc(sizeof(struct rwnx_txq)*NX_NB_TXQ);
 #endif
 
 	for (i = 0; i < NX_NB_TXQ; i++) {
