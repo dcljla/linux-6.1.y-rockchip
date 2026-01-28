@@ -1,6 +1,6 @@
 ########## config option ##########
 export CONFIG_USE_FW_REQUEST = n
-export CONFIG_PREALLOC_RX_SKB = n
+export CONFIG_PREALLOC_RX_SKB = y
 export CONFIG_PREALLOC_TXQ = y
 export CONFIG_OOB = n
 export CONFIG_GPIO_WAKEUP = n

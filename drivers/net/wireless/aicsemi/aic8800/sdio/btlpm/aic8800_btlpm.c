@@ -71,9 +71,7 @@
 #define DEFAULT_UART_INDEX   1
 #define BT_BLUEDROID_SUPPORT 1
 static int bluesleep_start(void);
-#if 0
 static void bluesleep_stop(void);
-#endif
 
 struct bluesleep_info {
 	unsigned int wakeup_enable;
@@ -587,7 +585,6 @@ fail:
 	return retval;
 }
 
-#if 0
 /**
  * Stops the Sleep-Mode Protocol on the Host.
  */
@@ -623,8 +620,6 @@ static void bluesleep_stop(void)
 	wake_lock_timeout(&bsi->wake_lock, HZ / 2);
 #endif
 }
-#endif
-
 #if 0
 /**
  * Read the <code>BT_WAKE</code> GPIO pin value via the proc interface.
@@ -815,7 +810,7 @@ static int __init bluesleep_probe(struct platform_device *pdev)
 	}
 
 	/* set host_wake_assert */
-	aicwf_sdio_aicbsp_get_feature(&bsp_feature_lpm);
+	aicbsp_get_feature(&bsp_feature_lpm);
 	if (bsp_feature_lpm.irqf == 0)
 		bsi->host_wake_assert = (config == OF_GPIO_ACTIVE_LOW) ? 0 : 1;
 	else
@@ -934,13 +929,13 @@ static int __init bluesleep_probe(struct platform_device *pdev)
 	return 0;
 
 err3:
-#if LINUX_VERSION_CODE < KERNEL_VERSION(5,12,0)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
 	devm_gpio_free(dev, bsi->ext_wake);
 #endif
 err2:
 	device_init_wakeup(dev, false);
 err1:
-#if LINUX_VERSION_CODE < KERNEL_VERSION(5,12,0)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
 	devm_gpio_free(dev, bsi->host_wake);
 #endif
 err0:
