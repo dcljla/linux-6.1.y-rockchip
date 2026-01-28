@@ -42,7 +42,7 @@
 
 #include "aic_bsp_export.h"
 extern uint8_t scanning;
-extern bool get_fdrv_no_reg_sdio(void);
+extern bool aicwf_sdio_get_fdrv_no_reg_sdio(void);
 
 #ifdef CONFIG_SDIO_ADMA
 unsigned char sdio_tx_buf_fill[512];
@@ -590,7 +590,7 @@ static int rwnx_register_hostwake_irq(struct device *dev)
 	int irq_flags;
 //TODO hostwake_irq_num hostwake_irq_num and wakeup_enable
 
-	aicbsp_get_feature(&aicwf_feature, NULL);
+	aicwf_sdio_aicbsp_get_feature(&aicwf_feature, NULL);
 	if (aicwf_feature.irqf == 0)
 		flag_edge = IRQF_TRIGGER_RISING | IRQF_NO_SUSPEND;
 	else
@@ -1203,7 +1203,7 @@ extern void mmc_release_host(struct mmc_host *host);
 #endif
 
 #if 1//def CONFIG_FDRV_NO_REG_SDIO
-extern struct sdio_func *get_sdio_func(void);
+extern struct sdio_func *aicwf_sdio_get_sdio_func(void);
 void aicwf_sdio_probe_(struct sdio_func *func, const struct sdio_device_id *id);
 void aicwf_sdio_remove_(struct sdio_func *func);
 #endif
@@ -1243,7 +1243,7 @@ void aicwf_sdio_register(void)
 #endif
 
 
-	if(!get_fdrv_no_reg_sdio()) {
+	if(!aicwf_sdio_get_fdrv_no_reg_sdio()) {
 		if (sdio_register_driver(&aicwf_sdio_driver)) {
 			AICWFDBG(LOGERROR, "%s sdio_register_driver\r\n", __func__);
 
@@ -1251,7 +1251,7 @@ void aicwf_sdio_register(void)
 			//may add mmc_rescan here
 		}
 	} else {
-		aicwf_sdio_probe_(get_sdio_func(), NULL);
+		aicwf_sdio_probe_(aicwf_sdio_get_sdio_func(), NULL);
 	}
 }
 
@@ -1278,10 +1278,10 @@ void aicwf_sdio_exit(void)
 
     udelay(500);
 
-	if(!get_fdrv_no_reg_sdio()) {
+	if(!aicwf_sdio_get_fdrv_no_reg_sdio()) {
 		sdio_unregister_driver(&aicwf_sdio_driver);
 	} else {
-		aicwf_sdio_remove_(get_sdio_func());
+		aicwf_sdio_remove_(aicwf_sdio_get_sdio_func());
 	}
 
 #if 0
@@ -2383,7 +2383,7 @@ void aicwf_sdio_aggrbuf_reset(struct aicwf_tx_priv *tx_priv)
 #endif/* CONFIG_SDIO_ADMA */
 }
 
-extern void set_irq_handler(void *fn);
+extern void aicwf_sdio_set_irq_handler(void *fn);
 
 static int aicwf_sdio_bus_start(struct device *dev)
 {
@@ -2394,12 +2394,12 @@ static int aicwf_sdio_bus_start(struct device *dev)
 
 	sdio_claim_host(sdiodev->func);
 #ifndef CONFIG_FDRV_NO_REG_SDIO
-	if(get_fdrv_no_reg_sdio())
-		set_irq_handler(aicwf_sdio_hal_irqhandler);
+	if(aicwf_sdio_get_fdrv_no_reg_sdio())
+		aicwf_sdio_set_irq_handler(aicwf_sdio_hal_irqhandler);
 	else
 		sdio_claim_irq(sdiodev->func, aicwf_sdio_hal_irqhandler);
 #else
-    set_irq_handler(aicwf_sdio_hal_irqhandler);
+    aicwf_sdio_set_irq_handler(aicwf_sdio_hal_irqhandler);
 #endif
 	if(sdiodev->chipid == PRODUCT_ID_AIC8800D80 ||
 		sdiodev->chipid == PRODUCT_ID_AIC8800D80N ||
@@ -3084,8 +3084,8 @@ int aicwf_sdio_func_init(struct aic_sdio_dev *sdiodev)
 	struct aicbsp_feature_t feature;
 	//u8 val = 0;
 
-	aicbsp_get_feature(&feature, NULL);
-    aicwf_sdio_reg_init(sdiodev);
+	aicwf_sdio_aicbsp_get_feature(&feature, NULL);
+	aicwf_sdio_reg_init(sdiodev);
 
 	host = sdiodev->func->card->host;
 
@@ -3202,15 +3202,15 @@ int aicwf_sdiov3_func_init(struct aic_sdio_dev *sdiodev)
 	int ret = 0;
 	struct aicbsp_feature_t feature;
 	//u8 val = 0;
-    u8 val1 = 0;
+	u8 val1 = 0;
 
-	aicbsp_get_feature(&feature, NULL);
-    aicwf_sdio_reg_init(sdiodev);
+	aicwf_sdio_aicbsp_get_feature(&feature, NULL);
+	aicwf_sdio_reg_init(sdiodev);
 
 	host = sdiodev->func->card->host;
 
 	sdio_claim_host(sdiodev->func);
-    sdiodev->func->card->quirks |= MMC_QUIRK_LENIENT_FN0;
+	sdiodev->func->card->quirks |= MMC_QUIRK_LENIENT_FN0;
 
 	ret = sdio_set_block_size(sdiodev->func, SDIOWIFI_FUNC_BLOCKSIZE);
 	if (ret < 0) {

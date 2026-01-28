@@ -56,16 +56,16 @@ typedef struct {
 #endif
 
 #ifdef CONFIG_DPD
-extern rf_misc_ram_lite_t dpd_res;
+extern rf_misc_ram_lite_t aicwf_sdio_dpd_res;
 #endif
 
 #ifdef CONFIG_LOFT_CALIB
-extern rf_misc_ram_lite_t loft_res_local;
+extern rf_misc_ram_lite_t aicwf_sdio_loft_res_local;
 #endif
 
-int aicbsp_set_subsys(int, int);
-int aicbsp_get_feature(struct aicbsp_feature_t *feature, char *fw_path);
-struct sk_buff *aicbsp_resv_mem_alloc_skb(unsigned int length, uint32_t id);
-void aicbsp_resv_mem_kfree_skb(struct sk_buff *skb, uint32_t id);
+int aicwf_sdio_aicbsp_set_subsys(int, int);
+int aicwf_sdio_aicbsp_get_feature(struct aicbsp_feature_t *feature, char *fw_path);
+struct sk_buff *aicwf_sdio_aicbsp_resv_mem_alloc_skb(unsigned int length, uint32_t id);
+void aicwf_sdio_aicbsp_resv_mem_kfree_skb(struct sk_buff *skb, uint32_t id);
 
 #endif

@@ -159,7 +159,7 @@ void rfkill_rk_sleep_bt(bool sleep);
 #endif
 #endif
 
-int aicbsp_set_subsys(int subsys, int state)
+int aicwf_sdio_aicbsp_set_subsys(int subsys, int state)
 {
 	static int pre_power_map;
 	int cur_power_map;
@@ -228,13 +228,12 @@ err0:
 	mutex_unlock(&aicbsp_power_lock);
 	return -1;
 }
-EXPORT_SYMBOL_GPL(aicbsp_set_subsys);
+EXPORT_SYMBOL_GPL(aicwf_sdio_aicbsp_set_subsys);
 
-bool aicbsp_get_load_fw_in_fdrv(void){
+bool aicwf_sdio_aicbsp_get_load_fw_in_fdrv(void){
 	return aicbsp_load_fw_in_fdrv;
 }
-
-EXPORT_SYMBOL_GPL(aicbsp_get_load_fw_in_fdrv);
+EXPORT_SYMBOL_GPL(aicwf_sdio_aicbsp_get_load_fw_in_fdrv);
 
 static int aicwf_sdio_chipmatch(struct aic_sdio_dev *sdio_dev, uint16_t vid, uint16_t did){
 
@@ -1742,8 +1741,8 @@ int aicwf_sdio_func_init(struct aic_sdio_dev *sdiodev)
 	int ret = 0;
 	struct aicbsp_feature_t feature;
 
-	aicbsp_get_feature(&feature, NULL);
-    aicwf_sdio_reg_init(sdiodev);
+	aicwf_sdio_aicbsp_get_feature(&feature, NULL);
+	aicwf_sdio_reg_init(sdiodev);
 
 	host = sdiodev->func->card->host;
 
@@ -1838,8 +1837,8 @@ int aicwf_sdiov3_func_init(struct aic_sdio_dev *sdiodev)
     //u8 val;
 	struct aicbsp_feature_t feature;
 
-	aicbsp_get_feature(&feature, NULL);
-    aicwf_sdio_reg_init(sdiodev);
+	aicwf_sdio_aicbsp_get_feature(&feature, NULL);
+	aicwf_sdio_reg_init(sdiodev);
 
 	host = sdiodev->func->card->host;
 
@@ -2014,34 +2013,40 @@ fail:
 	return NULL;
 }
 
-void get_fw_path(char* fw_path){
+void aicwf_sdio_get_fw_path(char* fw_path){
 	if (strlen(aic_fw_path) > 0) {
 		memcpy(fw_path, aic_fw_path, strlen(aic_fw_path));
 	}else{
 		memcpy(fw_path, aic_default_fw_path, strlen(aic_default_fw_path));
 	}
 }
+EXPORT_SYMBOL(aicwf_sdio_get_fw_path);
 
-int get_testmode(void){
+int aicwf_sdio_get_testmode(void){
 	return testmode;
 }
+EXPORT_SYMBOL(aicwf_sdio_get_testmode);
 
-struct sdio_func *get_sdio_func(void){
+struct sdio_func *aicwf_sdio_get_sdio_func(void){
     return aicbsp_sdiodev->func;
 }
+EXPORT_SYMBOL(aicwf_sdio_get_sdio_func);
 
-void set_irq_handler(void *fn){
+void aicwf_sdio_set_irq_handler(void *fn){
     aicbsp_sdiodev->sdio_hal_irqhandler = (sdio_irq_handler_t *)fn;
 }
+EXPORT_SYMBOL(aicwf_sdio_set_irq_handler);
 
 extern int adap_test;
-int get_adap_test(void){
+int aicwf_sdio_get_adap_test(void){
     return adap_test;
 }
+EXPORT_SYMBOL(aicwf_sdio_get_adap_test);
 
-bool get_fdrv_no_reg_sdio(void){
+bool aicwf_sdio_get_fdrv_no_reg_sdio(void){
     return fdrv_no_reg_sdio;
 }
+EXPORT_SYMBOL(aicwf_sdio_get_fdrv_no_reg_sdio);
 
 uint8_t crc8_ponl_107(uint8_t *p_buffer, uint16_t cal_size)
 {
@@ -2066,11 +2071,3 @@ uint8_t crc8_ponl_107(uint8_t *p_buffer, uint16_t cal_size)
     }
     return crc;
 }
-
-EXPORT_SYMBOL(get_fw_path);
-EXPORT_SYMBOL(get_testmode);
-EXPORT_SYMBOL(get_sdio_func);
-EXPORT_SYMBOL(set_irq_handler);
-EXPORT_SYMBOL(get_adap_test);
-EXPORT_SYMBOL(get_fdrv_no_reg_sdio);
-

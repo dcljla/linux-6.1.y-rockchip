@@ -372,9 +372,13 @@ u32 wifi_rxgain_table_24g_40m_8800dcdw[64] = {
 #define RAM_LMAC_FW_ADDR               0x00150000
 #ifdef CONFIG_DPD
 #if (defined(CONFIG_DPD) && !defined(CONFIG_FORCE_DPD_CALIB))
-extern int is_file_exist(char* name);
+extern int aicwf_sdio_is_file_exist(char* name);
 #endif
-extern rf_misc_ram_lite_t dpd_res;
+/*
+ * It has already been declared in aic_bsp_export.h,
+ * so the following line of code is unnecessary.
+ */
+//extern rf_misc_ram_lite_t aicwf_sdio_dpd_res;
 
 int aicwf_fdrv_dpd_result_apply_8800dc(struct rwnx_hw *rwnx_hw, rf_misc_ram_lite_t *dpd_res)
 {
@@ -454,7 +458,11 @@ int aicwf_fdrv_dpd_result_load_8800dc(struct rwnx_hw *rwnx_hw, rf_misc_ram_lite_
 #endif
 
 #if defined(CONFIG_LOFT_CALIB)
-extern rf_misc_ram_lite_t loft_res_local;
+/*
+ * It has already been declared in aic_bsp_export.h,
+ * so the following line of code is unnecessary.
+ */
+//extern rf_misc_ram_lite_t aicwf_sdio_loft_res_local;
 
 int aicwf_fdrv_loft_result_apply_8800dc(struct rwnx_hw *rwnx_hw, rf_misc_ram_lite_t *loft_res)
 {
@@ -594,16 +602,16 @@ int aicwf_set_rf_config_8800dc(struct rwnx_hw *rwnx_hw, struct mm_set_rf_calib_c
                 }
             }
             #endif
-            if (dpd_res.bit_mask[1]) {
-                ret = aicwf_fdrv_dpd_result_apply_8800dc(rwnx_hw, &dpd_res);
+            if (aicwf_sdio_dpd_res.bit_mask[1]) {
+                ret = aicwf_fdrv_dpd_result_apply_8800dc(rwnx_hw, &aicwf_sdio_dpd_res);
                 if (ret) {
                     AICWFDBG(LOGINFO, "apply dpd bin fail: %d\n", ret);
                     return ret;
                 }
             }
             #elif defined(CONFIG_LOFT_CALIB)
-            if (loft_res_local.bit_mask[1]) {
-                ret = aicwf_fdrv_loft_result_apply_8800dc(rwnx_hw, &loft_res_local);
+            if (aicwf_sdio_loft_res_local.bit_mask[1]) {
+                ret = aicwf_fdrv_loft_result_apply_8800dc(rwnx_hw, &aicwf_sdio_loft_res_local);
                 if (ret) {
                     AICWFDBG(LOGINFO, "apply loft res fail: %d\n", ret);
                     return ret;

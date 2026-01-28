@@ -1084,7 +1084,7 @@ int aicwf_plat_calib_load_8800dc(struct aic_sdio_dev *sdiodev)
 
 #ifdef CONFIG_DPD
 #ifndef CONFIG_FORCE_DPD_CALIB
-int is_file_exist(char* name)
+int aicwf_sdio_is_file_exist(char* name)
 {
     char *path = NULL;
     struct file *fp = NULL;
@@ -1111,18 +1111,18 @@ int is_file_exist(char* name)
     }
 }
 
-EXPORT_SYMBOL(is_file_exist);
+EXPORT_SYMBOL(aicwf_sdio_is_file_exist);
 #endif
 #endif
 
 #ifdef CONFIG_DPD
-rf_misc_ram_lite_t dpd_res = {{0},};
-EXPORT_SYMBOL(dpd_res);
+rf_misc_ram_lite_t aicwf_sdio_dpd_res = {{0},};
+EXPORT_SYMBOL(aicwf_sdio_dpd_res);
 #endif
 
 #ifdef CONFIG_LOFT_CALIB
-rf_misc_ram_lite_t loft_res_local = {{0},};
-EXPORT_SYMBOL(loft_res_local);
+rf_misc_ram_lite_t aicwf_sdio_loft_res_local = {{0},};
+EXPORT_SYMBOL(aicwf_sdio_loft_res_local);
 #endif
 
 static int rwnx_plat_patch_load(struct aic_sdio_dev *sdiodev)
@@ -1160,7 +1160,7 @@ static int rwnx_plat_patch_load(struct aic_sdio_dev *sdiodev)
                 #ifdef CONFIG_FORCE_DPD_CALIB
                 if (1) {
                     AICWFDBG(LOGINFO, "dpd calib & write\n");
-                    ret = aicwf_dpd_calib_8800dc(sdiodev, &dpd_res);
+                    ret = aicwf_dpd_calib_8800dc(sdiodev, &aicwf_sdio_dpd_res);
                     if (ret) {
                         AICWFDBG(LOGINFO, "dpd calib fail: %d\n", ret);
                         return ret;
@@ -1210,7 +1210,7 @@ static int rwnx_plat_patch_load(struct aic_sdio_dev *sdiodev)
                         return ret;
                     }
                     AICWFDBG(LOGINFO, "dpd calib & write\n");
-                    ret = aicwf_dpd_calib_8800dc(sdiodev, &dpd_res);
+                    ret = aicwf_dpd_calib_8800dc(sdiodev, &aicwf_sdio_dpd_res);
                     if (ret) {
                         AICWFDBG(LOGINFO, "dpd calib fail: %d\n", ret);
                         return ret;
@@ -2198,7 +2198,7 @@ int aicbsp_driver_fw_init(struct aic_sdio_dev *sdiodev)
 	return 0;
 }
 
-int aicbsp_get_feature(struct aicbsp_feature_t *feature, char *fw_path)
+int aicwf_sdio_aicbsp_get_feature(struct aicbsp_feature_t *feature, char *fw_path)
 {
 	if (aicbsp_sdiodev->chipid == PRODUCT_ID_AIC8801 ||
         aicbsp_sdiodev->chipid == PRODUCT_ID_AIC8800DC ||
@@ -2220,8 +2220,7 @@ int aicbsp_get_feature(struct aicbsp_feature_t *feature, char *fw_path)
     sdio_dbg("%s, set FEATURE_SDIO_CLOCK %d MHz\n", __func__, feature->sdio_clock/1000000);
 	return 0;
 }
-
-EXPORT_SYMBOL_GPL(aicbsp_get_feature);
+EXPORT_SYMBOL_GPL(aicwf_sdio_aicbsp_get_feature);
 
 #ifdef CONFIG_RESV_MEM_SUPPORT
 static struct skb_buff_pool resv_skb[] = {
@@ -2249,7 +2248,7 @@ int aicbsp_resv_mem_deinit(void)
     return 0;
 }
 
-struct sk_buff *aicbsp_resv_mem_alloc_skb(unsigned int length, uint32_t id)
+struct sk_buff *aicwf_sdio_aicbsp_resv_mem_alloc_skb(unsigned int length, uint32_t id)
 {
     if (resv_skb[id].size < length) {
             pr_err("aicbsp: %s, no enough mem\n", __func__);
@@ -2279,15 +2278,15 @@ struct sk_buff *aicbsp_resv_mem_alloc_skb(unsigned int length, uint32_t id)
 fail:
     return NULL;
 }
-EXPORT_SYMBOL_GPL(aicbsp_resv_mem_alloc_skb);
+EXPORT_SYMBOL_GPL(aicwf_sdio_aicbsp_resv_mem_alloc_skb);
 
-void aicbsp_resv_mem_kfree_skb(struct sk_buff *skb, uint32_t id)
+void aicwf_sdio_aicbsp_resv_mem_kfree_skb(struct sk_buff *skb, uint32_t id)
 {
 	resv_skb[id].used = 0;
 	printk("aicbsp: %s, free %s succuss, id: %d, size: %d\n", __func__,
                     resv_skb[id].name, resv_skb[id].id, resv_skb[id].size);
 }
-EXPORT_SYMBOL_GPL(aicbsp_resv_mem_kfree_skb);
+EXPORT_SYMBOL_GPL(aicwf_sdio_aicbsp_resv_mem_kfree_skb);
 
 #else
 
