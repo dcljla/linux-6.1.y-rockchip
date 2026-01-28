@@ -26,9 +26,9 @@
 
 #define FLASH_BIN_ADDR_8800M80  0x8000000
 
-extern void set_testmode(int);
-extern int get_flash_bin_size(void);
-extern u32 get_flash_bin_crc(void);
+extern void aicwf_usb_set_testmode(int);
+extern int aicwf_usb_get_flash_bin_size(void);
+extern u32 aicwf_usb_get_flash_bin_crc(void);
 extern int testmode;
 
 extern int rwnx_fill_station_info(struct rwnx_sta *sta, struct rwnx_vif *vif,
@@ -1476,9 +1476,9 @@ static int aic_priv_cmd_check_flash(struct rwnx_hw *rwnx_hw, int argc, char *arg
 {
     cmd_check_flash_t cmd_check_flash;
     cmd_check_flash.flash_read_addr = FLASH_BIN_ADDR_8800M80;
-    cmd_check_flash.flash_read_size = get_flash_bin_size();
+    cmd_check_flash.flash_read_size = aicwf_usb_get_flash_bin_size();
     rwnx_send_rftest_req(rwnx_hw, CHECK_FLASH, sizeof(cmd_check_flash), (u8_l *)&cmd_check_flash, &cfm);
-    cfm.rftest_result[1] = get_flash_bin_crc();
+    cfm.rftest_result[1] = aicwf_usb_get_flash_bin_crc();
 
     AICWFDBG(LOGINFO, "flash_crc: %x %x\n", cfm.rftest_result[0], cfm.rftest_result[1]);
     memcpy(command, &cfm.rftest_result[0], 8);
@@ -2070,7 +2070,7 @@ int android_priv_cmd(struct net_device *net, struct ifreq *ifr, int cmd)
 				(g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800D81X2) ||
 				(g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800D89X2) ||
 				(g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800D80N)){
-				set_testmode(!testmode);
+				aicwf_usb_set_testmode(!testmode);
 				rwnx_send_reboot(g_rwnx_plat->usbdev->rwnx_hw);
 			}
 		}
@@ -2078,7 +2078,7 @@ int android_priv_cmd(struct net_device *net, struct ifreq *ifr, int cmd)
 		goto exit;
 	}else if(!strncasecmp(command, CMD_SET_BLE_WAKE, strlen(CMD_SET_BLE_WAKE))){
 		if(g_rwnx_plat && g_rwnx_plat->usbdev->rwnx_hw){
-			set_testmode(5);
+			aicwf_usb_set_testmode(5);
 			rwnx_send_reboot(g_rwnx_plat->usbdev->rwnx_hw);
 		}
 		ret = 0;

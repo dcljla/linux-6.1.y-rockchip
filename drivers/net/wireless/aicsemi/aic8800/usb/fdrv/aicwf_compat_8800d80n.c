@@ -41,7 +41,7 @@ int rwnx_request_firmware_common(struct rwnx_hw *rwnx_hw,
 void rwnx_plat_userconfig_parsing(char *buffer, int size);
 void rwnx_release_firmware_common(u32** buffer);
 
-extern int get_adap_test(void);
+extern int aicwf_usb_get_adap_test(void);
 
 typedef u32 (*array2_tbl_t)[2];
 typedef u32 (*array3_tbl_t)[3];
@@ -206,7 +206,7 @@ void aicwf_patch_config_8800d80n(struct rwnx_hw *rwnx_hw)
     int adap_test = 0;
     int adap_patch_num = 0;
 
-    adap_test = get_adap_test();
+    adap_test = aicwf_usb_get_adap_test();
 //adap test
 
     if (testmode == 0) {

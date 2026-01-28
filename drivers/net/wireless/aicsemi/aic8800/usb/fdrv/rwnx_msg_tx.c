@@ -2309,8 +2309,7 @@ int rwnx_send_get_fw_version_req(struct rwnx_hw *rwnx_hw, struct mm_get_fw_versi
     return error;
 }
 
-
-extern void get_userconfig_txpwr_idx(txpwr_idx_conf_t *txpwr_idx);
+extern void aicwf_usb_get_userconfig_txpwr_idx(txpwr_idx_conf_t *txpwr_idx);
 
 int rwnx_send_txpwr_idx_req(struct rwnx_hw *rwnx_hw)
 {
@@ -2340,7 +2339,7 @@ int rwnx_send_txpwr_idx_req(struct rwnx_hw *rwnx_hw)
 	txpwr_idx->ofdm256qam_5g=9;
 	txpwr_idx->ofdm1024qam_5g=9;
 
-	get_userconfig_txpwr_idx(txpwr_idx);
+	aicwf_usb_get_userconfig_txpwr_idx(txpwr_idx);
 
 	AICWFDBG(LOGINFO, "%s:enable:%d\r\n", __func__, txpwr_idx->enable);
 	AICWFDBG(LOGINFO, "%s:dsss:%d\r\n", __func__, txpwr_idx->dsss);
@@ -2844,7 +2843,7 @@ int rwnx_send_txpwr_lvl_adj_v2_req(struct rwnx_hw *rwnx_hw)
     }
 }
 
-extern void get_userconfig_txpwr_ofst(txpwr_ofst_conf_t *txpwr_ofst);
+extern void aicwf_usb_get_userconfig_txpwr_ofst(txpwr_ofst_conf_t *txpwr_ofst);
 
 int rwnx_send_txpwr_ofst_req(struct rwnx_hw *rwnx_hw)
 {
@@ -2872,7 +2871,7 @@ int rwnx_send_txpwr_ofst_req(struct rwnx_hw *rwnx_hw)
     txpwr_ofst->chan_122_140 = 0;
     txpwr_ofst->chan_142_165 = 0;
 	if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8801){
-		get_userconfig_txpwr_ofst(txpwr_ofst);
+		aicwf_usb_get_userconfig_txpwr_ofst(txpwr_ofst);
 	}else if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
 		rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DW){
 		get_userconfig_txpwr_ofst_in_fdrv(txpwr_ofst);
@@ -2983,7 +2982,7 @@ int rwnx_send_txpwr_ofst2x_v2_req(struct rwnx_hw *rwnx_hw)
     txpwr_ofst2x_v2 = &txpwr_ofst_req->txpwr_ofst2x_v2;
     txpwr_ofst2x_v2->enable = 0;
 
-	get_userconfig_txpwr_ofst2x_v2_in_fdrv(txpwr_ofst2x_v2);
+    get_userconfig_txpwr_ofst2x_v2_in_fdrv(txpwr_ofst2x_v2);
 
     if (txpwr_ofst2x_v2->enable){
         AICWFDBG(LOGINFO, "%s:enable:%d\r\n", __func__, txpwr_ofst2x_v2->enable);

@@ -2813,7 +2813,7 @@ int aicwf_patch_var_config_8800dc(struct rwnx_hw *rwnx_hw)
 }
 
 //adap test
-extern int get_adap_test(void);
+extern int aicwf_usb_get_adap_test(void);
 //adap test
 
 void aicwf_patch_config_8800dc(struct rwnx_hw *rwnx_hw)
@@ -2826,7 +2826,7 @@ void aicwf_patch_config_8800dc(struct rwnx_hw *rwnx_hw)
     int adap_test = 0;
     int adap_patch_num = 0;
 
-    adap_test = get_adap_test();
+    adap_test = aicwf_usb_get_adap_test();
 //adap test
 
     if (testmode == 0) {

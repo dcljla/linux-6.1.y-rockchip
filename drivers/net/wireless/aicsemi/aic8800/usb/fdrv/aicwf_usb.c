@@ -277,21 +277,21 @@ static void aicwf_usb_rx_complete(struct urb *urb)
     }
 
     if(!usb_dev->rwnx_hw){
-        aicwf_prealloc_rxbuff_free(rx_buff, &rx_priv->rxbuff_lock);
+        aicwf_usb_prealloc_rxbuff_free(rx_buff, &rx_priv->rxbuff_lock);
         aicwf_usb_rx_buf_put(usb_dev, usb_buf);
         AICWFDBG(LOGERROR, "usb_dev->rwnx_hw is not ready \r\n");
         return;
     }
 
     if (urb->actual_length > urb->transfer_buffer_length) {
-        aicwf_prealloc_rxbuff_free(rx_buff, &rx_priv->rxbuff_lock);
+        aicwf_usb_prealloc_rxbuff_free(rx_buff, &rx_priv->rxbuff_lock);
         aicwf_usb_rx_buf_put(usb_dev, usb_buf);
         aicwf_usb_rx_submit_all_urb_(usb_dev);
         return;
     }
 
     if (urb->status != 0 || !urb->actual_length) {
-        aicwf_prealloc_rxbuff_free(rx_buff, &rx_priv->rxbuff_lock);
+        aicwf_usb_prealloc_rxbuff_free(rx_buff, &rx_priv->rxbuff_lock);
         aicwf_usb_rx_buf_put(usb_dev, usb_buf);
         if(urb->status < 0){
             AICWFDBG(LOGDEBUG, "%s urb->status:%d \r\n", __func__, urb->status);
@@ -325,7 +325,7 @@ static void aicwf_usb_rx_complete(struct urb *urb)
         if(!aicwf_rxbuff_enqueue(usb_dev->dev, &rx_priv->rxq, rx_buff)){
             spin_unlock_irqrestore(&rx_priv->rxqlock, flags);
             usb_err("rx_priv->rxq is over flow!!!\n");
-            aicwf_prealloc_rxbuff_free(rx_buff, &rx_priv->rxbuff_lock);
+            aicwf_usb_prealloc_rxbuff_free(rx_buff, &rx_priv->rxbuff_lock);
             aicwf_usb_rx_buf_put(usb_dev, usb_buf);
             aicwf_usb_rx_submit_all_urb_(usb_dev);
             return;
@@ -340,7 +340,7 @@ static void aicwf_usb_rx_complete(struct urb *urb)
         aicwf_usb_rx_buf_put(usb_dev, usb_buf);
         aicwf_usb_rx_submit_all_urb_(usb_dev);
     } else {
-        aicwf_prealloc_rxbuff_free(rx_buff, &rx_priv->rxbuff_lock);
+        aicwf_usb_prealloc_rxbuff_free(rx_buff, &rx_priv->rxbuff_lock);
         aicwf_usb_rx_buf_put(usb_dev, usb_buf);
     }
 }
@@ -752,7 +752,7 @@ static int aicwf_usb_submit_rx_urb(struct aic_usb_dev *usb_dev,
         aicwf_usb_rx_buf_put(usb_dev, usb_buf);
         return -1;
     }
-    rx_buff =  aicwf_prealloc_rxbuff_alloc(&usb_dev->rx_priv->rxbuff_lock);
+    rx_buff =  aicwf_usb_prealloc_rxbuff_alloc(&usb_dev->rx_priv->rxbuff_lock);
 	if (rx_buff == NULL) {
 		AICWFDBG(LOGERROR, "failed to alloc rxbuff\r\n");
 		aicwf_usb_rx_buf_put(usb_dev, usb_buf);
@@ -762,14 +762,14 @@ static int aicwf_usb_submit_rx_urb(struct aic_usb_dev *usb_dev,
 	rx_buff->len = 0;
 	rx_buff->start = rx_buff->data;
 	rx_buff->read = rx_buff->start;
-	rx_buff->end = rx_buff->data + aicwf_rxbuff_size_get();
+	rx_buff->end = rx_buff->data + aicwf_usb_rxbuff_size_get();
 
     usb_buf->rx_buff = rx_buff;
 
     usb_fill_bulk_urb(usb_buf->urb,
         usb_dev->udev,
         usb_dev->bulk_in_pipe,
-        rx_buff->data, aicwf_rxbuff_size_get(), aicwf_usb_rx_complete, usb_buf);
+        rx_buff->data, aicwf_usb_rxbuff_size_get(), aicwf_usb_rx_complete, usb_buf);
 
     usb_buf->usbdev = usb_dev;
 
@@ -778,7 +778,7 @@ static int aicwf_usb_submit_rx_urb(struct aic_usb_dev *usb_dev,
     if (ret) {
         usb_err("usb submit rx urb fail:%d\n", ret);
         usb_unanchor_urb(usb_buf->urb);
-        aicwf_prealloc_rxbuff_free(rx_buff, &usb_dev->rx_priv->rxbuff_lock);
+        aicwf_usb_prealloc_rxbuff_free(rx_buff, &usb_dev->rx_priv->rxbuff_lock);
         aicwf_usb_rx_buf_put(usb_dev, usb_buf);
 
         mdelay(100);

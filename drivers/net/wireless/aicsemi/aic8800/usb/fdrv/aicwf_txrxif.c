@@ -72,7 +72,7 @@ void rxbuff_queue_flush(struct aicwf_rx_priv* rx_priv)
 #if 0
         rxbuff_free(tempbuf);
 #else
-        aicwf_prealloc_rxbuff_free(tempbuf, &rx_priv->rxbuff_lock);
+        aicwf_usb_prealloc_rxbuff_free(tempbuf, &rx_priv->rxbuff_lock);
 #endif
         pq->qcnt--;
     }
@@ -587,7 +587,7 @@ int aicwf_process_rxframes(struct aicwf_rx_priv *rx_priv)
 #ifndef CONFIG_USB_RX_REASSEMBLE
                 if (pkt_len > buffer->len) {
                     AICWFDBG(LOGERROR, "%s pkt_len:%d buffer->len:%d\r\n", __func__, pkt_len, buffer->len);
-                    aicwf_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
+                    aicwf_usb_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
                     atomic_dec(&rx_priv->rx_cnt);
                     return -EBADE;
                 }
@@ -599,7 +599,7 @@ int aicwf_process_rxframes(struct aicwf_rx_priv *rx_priv)
                     skb_inblock = __dev_alloc_skb(aggr_len + CCMP_OR_WEP_INFO, GFP_KERNEL);
                     if (skb_inblock == NULL) {
                         txrx_err("no more space! skip\n");
-                        aicwf_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
+                        aicwf_usb_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
                         atomic_dec(&rx_priv->rx_cnt);
                         return -EBADE;
                     }
@@ -620,7 +620,7 @@ int aicwf_process_rxframes(struct aicwf_rx_priv *rx_priv)
                     msg = kmalloc(aggr_len+4, GFP_KERNEL);
                     if(msg == NULL){
                         txrx_err("no more space for msg!\n");
-                        aicwf_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
+                        aicwf_usb_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
                         return -EBADE;
                     }
                     memcpy(msg, data, aggr_len + 4);
@@ -639,7 +639,7 @@ int aicwf_process_rxframes(struct aicwf_rx_priv *rx_priv)
                     kfree(msg);
                 }
             }
-            aicwf_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
+            aicwf_usb_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
             if (rx_urb_sched) {
                 schedule_work(&rx_priv->usbdev->rx_urb_work);
                 rx_urb_sched = false;
@@ -668,7 +668,7 @@ int aicwf_process_rxframes(struct aicwf_rx_priv *rx_priv)
 #ifndef CONFIG_USB_RX_REASSEMBLE
             if (pkt_len > buffer->len) {
                 AICWFDBG(LOGERROR, "%s pkt_len:%d buffer->len:%d\r\n", __func__, pkt_len, buffer->len);
-                aicwf_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
+                aicwf_usb_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
                 atomic_dec(&rx_priv->rx_cnt);
                 continue;
             }
@@ -677,7 +677,7 @@ int aicwf_process_rxframes(struct aicwf_rx_priv *rx_priv)
                 skb_inblock = __dev_alloc_skb(pkt_len + RX_HWHRD_LEN + CCMP_OR_WEP_INFO, GFP_KERNEL);
                 if (skb_inblock == NULL) {
                     txrx_err("no more space! skip\n");
-                    aicwf_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
+                    aicwf_usb_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
                     atomic_dec(&rx_priv->rx_cnt);
                     continue;
                 }
@@ -696,7 +696,7 @@ int aicwf_process_rxframes(struct aicwf_rx_priv *rx_priv)
                 msg = kmalloc(aggr_len+4, GFP_KERNEL);
                 if(msg == NULL){
                     txrx_err("no more space for msg!\n");
-                    aicwf_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
+                    aicwf_usb_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
                     return -EBADE;
                 }
                 memcpy(msg, data, aggr_len + 4);
@@ -713,7 +713,7 @@ int aicwf_process_rxframes(struct aicwf_rx_priv *rx_priv)
                 kfree(msg);
             }
 
-            aicwf_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
+            aicwf_usb_prealloc_rxbuff_free(buffer, &rx_priv->rxbuff_lock);
             if (rx_urb_sched) {
                 schedule_work(&rx_priv->usbdev->rx_urb_work);
                 rx_urb_sched = false;

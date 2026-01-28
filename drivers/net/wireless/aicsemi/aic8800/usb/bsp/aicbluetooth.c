@@ -897,56 +897,49 @@ int8_t rwnx_atoi(char *value){
 	return result;
 }
 
-void get_fw_path(char* fw_path){
+void aicwf_usb_get_fw_path(char* fw_path){
 	if (strlen(aic_fw_path) > 0) {
 		memcpy(fw_path, aic_fw_path, strlen(aic_fw_path));
 	}else{
 		memcpy(fw_path, aic_default_fw_path, strlen(aic_default_fw_path));
 	}
 } 
+EXPORT_SYMBOL(aicwf_usb_get_fw_path);
 
-void set_testmode(int val){
+void aicwf_usb_set_testmode(int val){
 	testmode = val;
 }
+EXPORT_SYMBOL(aicwf_usb_set_testmode);
 
-int get_testmode(void){
+int aicwf_usb_get_testmode(void){
 	return testmode;
 }
+EXPORT_SYMBOL(aicwf_usb_get_testmode);
 
-int get_hardware_info(void){
+int aicwf_usb_get_hardware_info(void){
 	return AIC_HW_INFO;
 }
+EXPORT_SYMBOL(aicwf_usb_get_hardware_info);
 
 extern int adap_test;
-int get_adap_test(void){
+int aicwf_usb_get_adap_test(void){
     return adap_test;
 }
+EXPORT_SYMBOL(aicwf_usb_get_adap_test);
 
-int get_flash_bin_size(void)
+int aicwf_usb_get_flash_bin_size(void)
 {
     return flash_write_size;
 }
+EXPORT_SYMBOL(aicwf_usb_get_flash_bin_size);
 
-u32 get_flash_bin_crc(void)
+u32 aicwf_usb_get_flash_bin_crc(void)
 {
     return flash_write_bin_crc;
 }
+EXPORT_SYMBOL(aicwf_usb_get_flash_bin_crc);
 
-EXPORT_SYMBOL(get_fw_path);
-
-EXPORT_SYMBOL(get_testmode);
-
-EXPORT_SYMBOL(set_testmode);
-
-EXPORT_SYMBOL(get_hardware_info);
-
-EXPORT_SYMBOL(get_adap_test);
-
-EXPORT_SYMBOL(get_flash_bin_size);
-EXPORT_SYMBOL(get_flash_bin_crc);
-
-
-void get_userconfig_xtal_cap(xtal_cap_conf_t *xtal_cap)
+void aicwf_usb_get_userconfig_xtal_cap(xtal_cap_conf_t *xtal_cap)
 {
 	xtal_cap->enable = userconfig_xtal_cap.enable;
 	xtal_cap->xtal_cap = userconfig_xtal_cap.xtal_cap;
@@ -956,10 +949,9 @@ void get_userconfig_xtal_cap(xtal_cap_conf_t *xtal_cap)
     printk("%s:xtal_cap     :%d\r\n", __func__, xtal_cap->xtal_cap);
     printk("%s:xtal_cap_fine:%d\r\n", __func__, xtal_cap->xtal_cap_fine);
 }
+EXPORT_SYMBOL(aicwf_usb_get_userconfig_xtal_cap);
 
-EXPORT_SYMBOL(get_userconfig_xtal_cap);
-
-void get_userconfig_txpwr_idx(txpwr_idx_conf_t *txpwr_idx){
+void aicwf_usb_get_userconfig_txpwr_idx(txpwr_idx_conf_t *txpwr_idx){
 	txpwr_idx->enable = userconfig_txpwr_idx.enable;
 	txpwr_idx->dsss = userconfig_txpwr_idx.dsss;
 	txpwr_idx->ofdmlowrate_2g4 = userconfig_txpwr_idx.ofdmlowrate_2g4;
@@ -983,10 +975,9 @@ void get_userconfig_txpwr_idx(txpwr_idx_conf_t *txpwr_idx){
 	printk("%s:ofdm1024qam_5g:%d\r\n", __func__, txpwr_idx->ofdm1024qam_5g);
 
 }
+EXPORT_SYMBOL(aicwf_usb_get_userconfig_txpwr_idx);
 
-EXPORT_SYMBOL(get_userconfig_txpwr_idx);
-
-void get_userconfig_txpwr_ofst(txpwr_ofst_conf_t *txpwr_ofst){
+void aicwf_usb_get_userconfig_txpwr_ofst(txpwr_ofst_conf_t *txpwr_ofst){
 	txpwr_ofst->enable = userconfig_txpwr_ofst.enable;
 	txpwr_ofst->chan_1_4 = userconfig_txpwr_ofst.chan_1_4;
 	txpwr_ofst->chan_5_9 = userconfig_txpwr_ofst.chan_5_9;
@@ -1006,8 +997,7 @@ void get_userconfig_txpwr_ofst(txpwr_ofst_conf_t *txpwr_ofst){
 	printk("%s:ofst_chan_142_165:%d\r\n", __func__, txpwr_ofst->chan_142_165);
 
 }
-
-EXPORT_SYMBOL(get_userconfig_txpwr_ofst);
+EXPORT_SYMBOL(aicwf_usb_get_userconfig_txpwr_ofst);
 
 void rwnx_plat_userconfig_set_value(char *command, char *value){	
 	//TODO send command
