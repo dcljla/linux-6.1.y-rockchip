@@ -18,10 +18,10 @@ struct aicwf_rx_buff_list {
     atomic_t rxbuff_list_len;
 };
 
-extern struct rx_buff *aicwf_usb_prealloc_rxbuff_alloc(spinlock_t *lock);
-extern void aicwf_usb_prealloc_rxbuff_free(struct rx_buff *rxbuff, spinlock_t *lock);
+extern struct rx_buff *aicwf_prealloc_rxbuff_alloc(spinlock_t *lock);
+extern void aicwf_prealloc_rxbuff_free(struct rx_buff *rxbuff, spinlock_t *lock);
 extern int aicwf_prealloc_init(void);
 extern void aicwf_prealloc_exit(void);
-extern int aicwf_usb_rxbuff_size_get(void);
+extern int aicwf_rxbuff_size_get(void);
 #endif
 #endif /* _AICWF_RX_PREALLOC_H_ */
