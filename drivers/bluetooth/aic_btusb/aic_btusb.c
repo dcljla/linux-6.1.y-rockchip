@@ -1483,6 +1483,7 @@ static long btchr_ioctl(struct file *file_p, unsigned int cmd,
 		return 1;
 	case DWFW_CMPLT:
 		AICBT_INFO(" btchr_ioctl DWFW_CMPLT");
+		fallthrough;
 #if 1
 	case SET_ISO_CFG:
 		AICBT_INFO("btchr_ioctl SET_ISO_CFG");
@@ -1493,6 +1494,7 @@ static long btchr_ioctl(struct file *file_p, unsigned int cmd,
 		// hdev->voice_setting = *(uint16_t*)arg;
 		AICBT_INFO(" voice settings = %d", hdev->voice_setting);
 		// return 1;
+		fallthrough;
 #endif
 	case GET_USB_INFO:
 		// ret = download_patch(fw_info,1);
@@ -3290,7 +3292,7 @@ int download_patch(firmware_info *fw_info, int cached)
 			printk("%s [0x40506004]: 0x04318000\r\n", __func__);
 			ret = rwnx_send_dbg_mem_write_req(fw_info, 0x40506004,
 							  0x04318000);
-			("%s [0x40506004]: 0x04338000\r\n", __func__);
+			printk("%s [0x40506004]: 0x04338000\r\n", __func__);
 			ret = rwnx_send_dbg_mem_write_req(fw_info, 0x40506004,
 							  0x04338000);
 			if (ret < 0) {
