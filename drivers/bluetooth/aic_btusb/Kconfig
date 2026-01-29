@@ -1,0 +1,5 @@
+config AIC8800_BTUSB_SUPPORT
+	tristate "AIC8800 USB bluetooth Support"
+	depends on AIC8800_USB_WLAN
+	help
+	  This is support for aic8800 usb bluetooh driver.
