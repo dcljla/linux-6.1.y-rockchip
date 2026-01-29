@@ -3,6 +3,7 @@
 menu "Bluetooth device drivers"
 	depends on BT
 
+source "drivers/bluetooth/aic_btsdio/Kconfig"
 source "drivers/bluetooth/aic_btusb/Kconfig"
 
 config BT_INTEL

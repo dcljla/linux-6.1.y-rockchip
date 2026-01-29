@@ -1,12 +1,9 @@
-ifeq ($(CONFIG_AIC8800_SDIO_BTLPM), y)
-  CONFIG_AIC8800_BTLPM_SUPPORT = m
-endif
+MODULE_NAME=aic8800_btsdio
 
-MODULE_NAME=aic8800_sdio_bt
-obj-$(CONFIG_AIC8800_BTLPM_SUPPORT) = $(MODULE_NAME).o
+obj-$(CONFIG_AIC8800_BTSDIO_SUPPORT) = $(MODULE_NAME).o
 $(MODULE_NAME)-y += aic8800_btlpm.o
 
-ccflags-y += -I$(srctree)/$(src)/../bsp
+ccflags-y += -I$(srctree)/drivers/net/wireless/aicsemi/aic8800/sdio//bsp
 
 CONFIG_SUPPORT_LPM ?= n
 CONFIG_AUTO_PM ?= n
