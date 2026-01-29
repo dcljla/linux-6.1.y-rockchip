@@ -1,7 +1,3 @@
-EXTRA_CFLAGS += $(USER_EXTRA_CFLAGS)
-EXTRA_CFLAGS += -Wno-implicit-fallthrough
-#EXTRA_CFLAGS += -Wno-unused-variable
-
 RWNX_VERS_NUM := 6.4.3.0
 
 ifeq ($(CONFIG_AIC8800_USB_WLAN), y)
