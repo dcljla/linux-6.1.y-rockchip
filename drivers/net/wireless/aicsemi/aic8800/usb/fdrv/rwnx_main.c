@@ -988,10 +988,10 @@ void rwnx_chanctx_unlink(struct rwnx_vif *vif)
     if (vif->ch_index == RWNX_CH_NOT_SET)
         return;
 
-	if (vif->ch_index >= NX_CHAN_CTXT_CNT) {
+    if (vif->ch_index >= NX_CHAN_CTXT_CNT) {
         WARN(1, "Invalid channel ctxt id %d", vif->ch_index);
         return;
-	}
+    }
 
     ctxt = &vif->rwnx_hw->chanctx_table[vif->ch_index];
 

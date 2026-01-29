@@ -96,8 +96,7 @@ int rwnx_plat_powerlimit_load_8800d80(struct rwnx_hw *rwnx_hw)
 
 int system_config_8800d80(struct rwnx_hw *rwnx_hw)
 {
-	int syscfg_num;
-	int ret, cnt;
+	int ret;
 	const u32 mem_addr = 0x40500000;
 	const u32 read_mem_addr = 0x40241014;
 	struct dbg_mem_read_cfm rd_mem_addr_cfm;
