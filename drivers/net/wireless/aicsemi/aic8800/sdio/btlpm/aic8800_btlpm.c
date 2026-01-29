@@ -71,7 +71,7 @@
 #define DEFAULT_UART_INDEX   1
 #define BT_BLUEDROID_SUPPORT 1
 static int bluesleep_start(void);
-static void bluesleep_stop(void);
+static void __maybe_unused bluesleep_stop(void);
 
 struct bluesleep_info {
 	unsigned int wakeup_enable;
